@@ -27,8 +27,9 @@ remove the nth node from the tail of a singly linked list & return the head
 Solution:
 - use 2 pointers to save a sliding window of n-nodes
 - move window until right most pointer has no next node
-- time complexity: O(N)
-- space complexity: n, only need to store n-nodes in the window
+
+time: O(N)
+space: n, only need to store n-nodes in the window
 """
 def remove_n(head, n):
   # assuming that the n will always lie within the list
