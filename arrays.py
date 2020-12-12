@@ -56,7 +56,8 @@ def three_sum(arr, target):
   size = len(arr)
   ans = []
   for i in range(size):
-    if arr[i] > target:
+    # logic only works if target is non negative
+    if 0 <= target <= arr[i]:
       break
     # remove duplicate from 3 sum
     if i > 0 and arr[i] == arr[i-1]:
@@ -82,3 +83,38 @@ def three_sum(arr, target):
         lp += 1
 
   return ans
+
+
+"""
+remove K duplicates from array
+given a sorted array, remove all K+1 duplicate instances of elements in the array, return the size of new array
+e.g k = 2, no element in the resulting array should hv more than 2 duplicates
+>>> [1,1,1,2,3,3,3,4,7]
+>>> [1,1,2,3,3,4,7]
+
+- if len(arr) < k+1, return the array as it is not possible to have more than the allowed duplicates
+- instantiate left & right pointers to k
+- the pointer at lp represents the start of the unused/duplicate values
+- the pointer at rp represents the start of the remaining elements to be iterated 
+- lp & rp are the same value so that in the case of no duplicates, the array is not changed
+- while rp < len(arr)
+  - if element at lp-k != rp, replace lp with rp & inc lp
+  - since the arr is sorted if the element at lp-k == element at rp, then it is a duplicate and does not need to be swapped
+  - lp only needs to be incremented in the case whr another duplicate is found
+  - inc rp
+
+time: O(N) only one pass of the array is required
+space: O(1) constant space is required 
+"""
+def rem_dup(arr, k):
+  size = len(arr)
+  if size < k+1:
+    return size
+
+  lp, rp = k, k
+  while rp < size:
+    if arr[lp-k] != arr[rp]:
+      arr[lp] = arr[rp]
+      lp += 1
+    rp += 1
+  return lp
