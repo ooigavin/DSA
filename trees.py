@@ -1,4 +1,4 @@
-class BinaryTree:
+class BinaryTreeNode:
 
   def __init__(self, val, left=None, right=None):
     self.val = val
@@ -7,27 +7,79 @@ class BinaryTree:
 
   def set_left(self, val):
     if self.left:
-      self.left = BinaryTree(val, left=self.left)
+      self.left = BinaryTreeNode(val, left=self.left)
     else:
-      self.left = BinaryTree(val)
+      self.left = BinaryTreeNode(val)
 
   def set_right(self, val):
     if self.right:
-      self.right = BinaryTree(val, right=self.right)
+      self.right = BinaryTreeNode(val, right=self.right)
     else:
-      self.right = BinaryTree(val)
+      self.right = BinaryTreeNode(val)
 
 def setup():
-  a = BinaryTree('a')
-  c = BinaryTree('c')
-  e = BinaryTree('e')
-  h = BinaryTree('h')
-  d = BinaryTree('d', left=c, right=e)
-  b = BinaryTree('b', left=a, right=d)
-  i = BinaryTree('i', left=h)
-  g = BinaryTree('g', right=i)
-  f = BinaryTree('f', left=b, right=g)
+  a = BinaryTreeNode('a')
+  c = BinaryTreeNode('c')
+  e = BinaryTreeNode('e')
+  h = BinaryTreeNode('h')
+  d = BinaryTreeNode('d', left=c, right=e)
+  b = BinaryTreeNode('b', left=a, right=d)
+  i = BinaryTreeNode('i', left=h)
+  g = BinaryTreeNode('g', right=i)
+  f = BinaryTreeNode('f', left=b, right=g)
   return f
+
+def deserialize(tree_str):
+  vals = [v for v in tree_str.split(',')]
+  if vals:
+    vals[0] = BinaryTreeNode(val=vals[0])
+  for i in range(len(vals)):
+    left_index = i*2 + 1
+    right_index = i*2 + 2
+    if left_index >= len(vals):
+      break
+
+    left = BinaryTreeNode(val=vals[left_index])
+    right = BinaryTreeNode(val=vals[right_index])
+    vals[left_index] = left
+    vals[right_index] = right
+
+    node = vals[i]
+    node.left = left
+    node.right = right
+  return vals[0]
+
+def serialize(root):
+  tree_str = ''
+  curr_nodes = 1
+  next_nodes = 0
+  lvl_str = ''
+  has_val = False
+  if root:
+    q = [root]
+  else:
+    return tree_str
+
+  while q:
+    node = q.pop()
+    curr_nodes -= 1
+    next_nodes += 2
+    if node:
+      val = node.val
+      has_val = True
+      q = [node.right, node.left] + q
+    else:
+      val = 'null'
+    lvl_str += f'{val},'
+    if curr_nodes == 0:
+      if has_val:
+        tree_str += lvl_str
+        curr_nodes, next_nodes = next_nodes, 0
+        lvl_str = ''
+        has_val = False
+      else:
+        break
+  return tree_str[:-1]
 
 
 """
@@ -171,3 +223,13 @@ def level_order(root):
       lvl = []
       curr_lvl, next_lvl = next_lvl, curr_lvl
   return ans
+
+"""
+check if a binary tree is symmetric
+
+- do level order traversal and check if each lvl is symmetric using 2 pointers
+- recursively compare the opp child subtrees 
+- create a queue and push the opp nodes to the queue for comparision
+"""
+def is_symmetric(root):
+  pass
